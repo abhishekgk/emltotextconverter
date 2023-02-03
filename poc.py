@@ -1,4 +1,5 @@
 import sys
+import base64
 import email
 
 def convert_eml_to_email_message(file_path):
@@ -45,8 +46,18 @@ def convert_eml_to_email_message(file_path):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print("Usage: python eml_to_email_message.py <eml_file_path>")
+        print("Usage: python eml_to_email_message.py <base64_encoded_eml_file>")
         sys.exit()
     file_path = sys.argv[1]
-    convert_eml_to_email_message(file_path)
 
+    # Decode the base64-encoded .eml file
+    with open(file_path, "rb") as f:
+        base64_content = f.read()
+    eml_content = base64.b64decode(base64_content)
+
+    # Save the decoded .eml content as a .eml file
+    with open("decoded_eml.eml", "wb") as f:
+        f.write(eml_content)
+
+    # Run the convert_eml_to_email_message function on the decoded .eml file
+    convert_eml_to_email_message("decoded_eml.eml")
